@@ -1,0 +1,337 @@
+[
+    {
+        "name": "RF01: Thermal Compliance Crisis",
+        "description": "Global count of shipments where iot_temperature is < 0 or > 15 (11,598 breaches).",
+        "sql": "iot_temperature NOT BETWEEN 0 AND 15",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF02: Supplier Integrity Audit",
+        "description": "Identification of carriers with frequent temperature violations above 8.0C.",
+        "sql": "iot_temperature > 8.0 GROUP BY supplier_id",
+        "tables": [
+            "fact_shipments",
+            "dim_suppliers"
+        ]
+    },
+    {
+        "name": "RF03: Status Casting Resolution",
+        "description": "Logic to handle order_fulfillment_status as VARCHAR to prevent numeric conversion errors.",
+        "sql": "CAST(order_fulfillment_status AS VARCHAR)",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF04: Thermal Volatility (RTE_01007)",
+        "description": "Statistical variance audit to find inconsistent cooling on specific routes.",
+        "sql": "route_id = 'RTE_01007' AND STDDEV(iot_temperature)",
+        "tables": [
+            "fact_shipments",
+            "dim_routes"
+        ]
+    },
+    {
+        "name": "RF05: Bimodal Peaks (RTE_00727)",
+        "description": "Detection of two distinct temperature clusters indicating cooling equipment failure.",
+        "sql": "route_id = 'RTE_00727'",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF06: Delay Frequency Ceiling",
+        "description": "Top 10 routes where delivery_time_deviation > 0 occurs in over 96% of cases.",
+        "sql": "AVG(CASE WHEN delivery_time_deviation > 0 THEN 1 ELSE 0 END) > 0.96",
+        "tables": [
+            "fact_shipments",
+            "dim_routes"
+        ]
+    },
+    {
+        "name": "RF07: Supplier SUP_00726 Failure",
+        "description": "Documenting specific supplier with a near-total (>99%) delay rate.",
+        "sql": "supplier_id = 'SUP_00726'",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF08: Supplier SUP_00548 Failure",
+        "description": "Documenting secondary supplier with a near-total (>99%) delay rate.",
+        "sql": "supplier_id = 'SUP_00548'",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF09: ID Padding Resolution",
+        "description": "Handling leading zero inconsistencies for supplier IDs (e.g. SUP_00875 vs SUP_875).",
+        "sql": "supplier_id LIKE '%875%'",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF10: 39.25% FTR Ceiling",
+        "description": "Measuring the cap on 'Perfect Shipments' (On-Time + Thermal Integrity) for SUP_00358.",
+        "sql": "supplier_id = 'SUP_00358'",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF11: 47.64% Cost Variance",
+        "description": "Isolating supplier billing anomalies compared to the global network average.",
+        "sql": "supplier_id = 'SUP_00484' AND AVG(shipping_costs)",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF12: Statistical Outlier (Z-Score)",
+        "description": "Isolating extreme tail-risk incidents where temperature Z-Score exceeds 4.5.",
+        "sql": "(iot_temperature - avg) / stddev > 4.5",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF13: $28M Spend Concentration",
+        "description": "Single-point-of-failure risk based on total financial volume for SUP_00101.",
+        "sql": "SUM(shipping_costs) BY supplier_id",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF14: Bottleneck RTE_00052",
+        "description": "Quantifying total time-loss impact (Volume * Avg Delay) for the most congested route.",
+        "sql": "route_id = 'RTE_00052'",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF15: Mean Imputation Artifact",
+        "description": "Detecting data quality flatlining where 18.6C is over-represented in sensor data.",
+        "sql": "iot_temperature = 18.6",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF16: Geospatial Hot-Zones",
+        "description": "Mapping failure clusters using 11.1km GPS coordinate rounding (1 decimal place).",
+        "sql": "ROUND(lat, 1), ROUND(lon, 1)",
+        "tables": [
+            "fact_shipments",
+            "dim_routes"
+        ]
+    },
+    {
+        "name": "RF17: Cost Volatility Audit",
+        "description": "Measuring standard deviation in billing to identify anomalous supplier behavior.",
+        "sql": "STDDEV(shipping_costs) BY supplier_id",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF18: Temperature-Linked Delays",
+        "description": "Correlation check between thermal compliance breaches and delivery time deviation.",
+        "sql": "iot_temperature > 15 AND delivery_time_deviation > 0",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "RF19: 0.1% Catastrophic Deviation",
+        "description": "Isolating the worst-performing 0.1% of delivery time outliers for risk mitigation.",
+        "sql": "PERCENT_RANK(delivery_time_deviation) > 0.999",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Total Shipment Volume",
+        "description": "Measures total network scale and throughput.",
+        "sql": "SELECT COUNT(*) FROM fact_shipments",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Fulfillment Status Distribution",
+        "description": "Percentage breakdown of Delivered, Delayed, and Pending shipments.",
+        "sql": "GROUP BY order_fulfillment_status",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Volume by Shift",
+        "description": "Identifies peak periods (Morning/Afternoon/Night) for staffing optimization.",
+        "sql": "CASE WHEN HOUR(timestamp) BETWEEN 6 AND 14 THEN 'Morning'...",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Asset Utilization Rate",
+        "description": "Ratio of unique vehicles used in shipments vs. total fleet size.",
+        "sql": "COUNT(DISTINCT vehicle_id) / Total Vehicles",
+        "tables": [
+            "fact_shipments",
+            "dim_vehicles"
+        ]
+    },
+    {
+        "name": "KPI: Average Delivery Time Deviation",
+        "description": "Global measure of ETA accuracy (Positive = Late, Negative = Early).",
+        "sql": "AVG(delivery_time_deviation)",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Route Lead-Time Analysis",
+        "description": "Compares delivery delays across different route risk levels.",
+        "sql": "AVG(delivery_time_deviation) GROUP BY route_risk_level",
+        "tables": [
+            "fact_shipments",
+            "dim_routes"
+        ]
+    },
+    {
+        "name": "KPI: Bottleneck Identification",
+        "description": "Impact Score = Volume * Average Delay for every route.",
+        "sql": "COUNT(*) * AVG(delivery_time_deviation)",
+        "tables": [
+            "fact_shipments",
+            "dim_routes"
+        ]
+    },
+    {
+        "name": "KPI: Route Circuitry",
+        "description": "Identifies planned vs. actual movement efficiency using GPS variance.",
+        "sql": "ROUND(vehicle_gps_latitude, 1)",
+        "tables": [
+            "fact_shipments",
+            "dim_routes"
+        ]
+    },
+    {
+        "name": "KPI: Total Spend by Supplier",
+        "description": "Total logistics financial throughput per vendor.",
+        "sql": "SUM(shipping_costs) GROUP BY supplier_id",
+        "tables": [
+            "fact_shipments",
+            "dim_suppliers"
+        ]
+    },
+    {
+        "name": "KPI: Average Shipping Cost per Route",
+        "description": "Geographical distribution of spend per corridor.",
+        "sql": "AVG(shipping_costs) GROUP BY route_id",
+        "tables": [
+            "fact_shipments",
+            "dim_routes"
+        ]
+    },
+    {
+        "name": "KPI: Cost-to-Weight Efficiency",
+        "description": "Measures transport cost per unit of weight (Inbound/Outbound).",
+        "sql": "shipping_costs / weight_kg",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Cost-to-Carrier Variance",
+        "description": "Identifies carriers charging significantly above network averages.",
+        "sql": "Actual Cost - Network Avg Cost",
+        "tables": [
+            "fact_shipments",
+            "dim_suppliers"
+        ]
+    },
+    {
+        "name": "KPI: Rolling Spend Trends",
+        "description": "7-day moving average of total logistics costs.",
+        "sql": "AVG(shipping_costs) OVER (ORDER BY timestamp ROWS BETWEEN 6 PRECEDING AND CURRENT ROW)",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Critical Temperature Breach Rate",
+        "description": "Volume of product safety violations (>15\u00b0C).",
+        "sql": "SUM(CASE WHEN iot_temperature > 15 THEN 1 ELSE 0 END) / COUNT(*)",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Thermal Compliance Rate",
+        "description": "% of shipments maintaining standard 0-15\u00b0C environment.",
+        "sql": "COUNT(Compliant) / Total",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Average Temperature Stability",
+        "description": "Consistency of the cold chain using Standard Deviation.",
+        "sql": "STDDEV(iot_temperature)",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Condition-Based Risk Score",
+        "description": "Composite score (0-100) based on Thermal, Delay, and Cost risks.",
+        "sql": "Weighted Average (Risk Factors)",
+        "tables": [
+            "fact_shipments"
+        ]
+    },
+    {
+        "name": "KPI: Load Distribution",
+        "description": "Workload balance across the vendor network to identify over-reliance.",
+        "sql": "COUNT(*) GROUP BY supplier_id",
+        "tables": [
+            "fact_shipments",
+            "dim_suppliers"
+        ]
+    },
+    {
+        "name": "KPI: Carrier Delay Frequency",
+        "description": "% of late deliveries per supplier.",
+        "sql": "Late_Count / Total_Count",
+        "tables": [
+            "fact_shipments",
+            "dim_suppliers"
+        ]
+    },
+    {
+        "name": "KPI: Vendor Thermal Integrity",
+        "description": "Ranking suppliers by their ability to maintain compliance.",
+        "sql": "AVG(iot_temperature) BY supplier_id",
+        "tables": [
+            "fact_shipments",
+            "dim_suppliers"
+        ]
+    },
+    {
+        "name": "KPI: Supplier Reliability Gap",
+        "description": "Gap between promised reliability score and actual compliance.",
+        "sql": "Actual % - Promised Reliability",
+        "tables": [
+            "dim_suppliers",
+            "fact_shipments"
+        ]
+    }
+]

@@ -1,0 +1,132 @@
+{
+    "dim_drivers": [
+        {
+            "name": "driver_id",
+            "type": "TEXT",
+            "nullable": true
+        },
+        {
+            "name": "driver_behavior_score",
+            "type": "REAL",
+            "nullable": true
+        },
+        {
+            "name": "fatigue_monitoring_score",
+            "type": "REAL",
+            "nullable": true
+        }
+    ],
+    "dim_routes": [
+        {
+            "name": "route_id",
+            "type": "TEXT",
+            "nullable": true
+        },
+        {
+            "name": "vehicle_gps_latitude",
+            "type": "REAL",
+            "nullable": true
+        },
+        {
+            "name": "vehicle_gps_longitude",
+            "type": "REAL",
+            "nullable": true
+        },
+        {
+            "name": "route_risk_level",
+            "type": "REAL",
+            "nullable": true
+        }
+    ],
+    "dim_suppliers": [
+        {
+            "name": "supplier_id",
+            "type": "TEXT",
+            "nullable": true
+        },
+        {
+            "name": "supplier_reliability_score",
+            "type": "REAL",
+            "nullable": true
+        },
+        {
+            "name": "port_congestion_level",
+            "type": "REAL",
+            "nullable": true
+        }
+    ],
+    "dim_vehicles": [
+        {
+            "name": "vehicle_id",
+            "type": "TEXT",
+            "nullable": true
+        },
+        {
+            "name": "fuel_consumption_rate",
+            "type": "REAL",
+            "nullable": true
+        },
+        {
+            "name": "loading_unloading_time",
+            "type": "REAL",
+            "nullable": true
+        },
+        {
+            "name": "risk_classification",
+            "type": "TEXT",
+            "nullable": true
+        }
+    ],
+    "fact_shipments": [
+        {
+            "name": "Shipment_ID",
+            "type": "INTEGER",
+            "nullable": true
+        },
+        {
+            "name": "timestamp",
+            "type": "TEXT",
+            "nullable": true
+        },
+        {
+            "name": "driver_id",
+            "type": "TEXT",
+            "nullable": true
+        },
+        {
+            "name": "vehicle_id",
+            "type": "TEXT",
+            "nullable": true
+        },
+        {
+            "name": "route_id",
+            "type": "TEXT",
+            "nullable": true
+        },
+        {
+            "name": "supplier_id",
+            "type": "TEXT",
+            "nullable": true
+        },
+        {
+            "name": "shipping_costs",
+            "type": "REAL",
+            "nullable": true
+        },
+        {
+            "name": "delivery_time_deviation",
+            "type": "REAL",
+            "nullable": true
+        },
+        {
+            "name": "iot_temperature",
+            "type": "REAL",
+            "nullable": true
+        },
+        {
+            "name": "order_fulfillment_status",
+            "type": "REAL",
+            "nullable": true
+        }
+    ]
+}
