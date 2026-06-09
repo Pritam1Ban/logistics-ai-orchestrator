@@ -11,6 +11,7 @@ The application bypasses complex cloud subscription fees by utilizing an incredi
 
 ## 🚀 Key Architectural Features
 
+* **Metadata-Driven RAG (Semantic Layer Abstraction):** Utilizes a true Retrieval-Augmented Generation (RAG) architecture powered by ChromaDB to isolate raw database tables from the LLM. Instead of passing massive database dumps, the system dynamically fetches only the relevant localized JSON schemas and column dictionaries matching the user's natural language intent, completely eliminating schema hallucination vectors.
 * **Semantic Layer Abstraction (Metadata-Driven RAG):** Isolates raw, sensitive database tables from the LLM. The agent queries a highly optimized, localized JSON schema context to eliminate hallucination vectors.
 * **Autonomous Multi-Mode Router:** Programmatically analyzes user prompts under the hood via keyword matrix scanning to automatically switch execution paths between raw numerical extraction (**KPI Mode**) and automated visualization sandboxing (**EDA Mode**).
 * **Isolated Script Execution Sandbox:** Utilizes Python's runtime environment (`exec()` with localized namespaces) to safely execute dynamically generated plotting pipelines without corrupting global application memory.
