@@ -216,3 +216,29 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# =====================================================================
+# CUSTOM PROJECT GUARDRAILS: CREDENTIALS & HEAVY STORAGE BLOCKS
+# =====================================================================
+
+# 1. SECURITY BLOCK: Ensure Google GenAI keys are never leaked to the public
+*.env
+LLM_API.env
+.env
+
+# 2. DATA STORAGE BLOCK: Exclude local heavy analytics databases
+*.db
+*.sqlite
+*.sqlite3
+logistics
+logistics_sqlite
+my_db
+
+# 3. METRIC EXTRACTIONS: Exclude local backup spreadsheet matrices
+*.xlsx
+*.csv
+
+# 4. INFRASTRUCTURE BLOCK: Exclude local vector indexing binaries
+chroma_db/
+.chroma/
+
