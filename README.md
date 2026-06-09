@@ -95,3 +95,6 @@ This architecture is currently a fully functional production prototype optimized
    * *Current Status:* Aggressive sequential text operations face Google Free Tier Requests-Per-Minute (RPM) throttles.
    * *Next Step:* Implementing query result caching structures via `@st.cache_data` paired with asynchronous batch execution handlers to minimize outbound API tokens during intense multi-turn business deep-dives.
 
+5. **Continuous Metadata Sync & Schema Evolution (Data Pipeline Phase):**
+* *Current Status:* The ChromaDB semantic layer relies on static pre-generated JSON and Dictionary files. In a production environment with rolling data, schema drifts, or new categorical values, the system requires manual vector store recalculations.
+* *Next Step:* Engineering an automated upstream cron trigger or event-driven pipeline (via dbt or direct database webhooks) that listens for DDL changes, automatically updates the JSON schema map, and re-indexes the ChromaDB collections in real-time.
