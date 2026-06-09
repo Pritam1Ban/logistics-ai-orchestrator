@@ -79,22 +79,26 @@ To run this data engine within your local workspace environment, follow the step
 
 This architecture is currently a fully functional production prototype optimized for single-node local execution. The following structural boundaries have been intentionally mapped to be resolved in the next development phase:
 
-1. **Enterprise Query Guardrails (Security Phase):**
-   * *Current Status:* Queries run on safe read-only loops due to database-level constraints.
-   * *Next Step:* Implementing an explicit rule-based abstract syntax tree (AST) parser or regex query validator gate directly into the pipeline to intercept and drop raw SQL mutation tokens (`DROP`, `DELETE`, `ALTER`) before they hit the compiler layer.
+## 🛑 Current Limitations & Future Engineering Roadmap
 
-2. **In-Memory Data Export Arrays (Delivery Phase):**
-   * *Current Status:* Data metrics are currently output directly as standard terminal Pandas string matrices.
-   * *Next Step:* Engineering an in-memory binary stream pipe utilizing `io.BytesIO` and `openpyxl` to allow end-users to instantly package extracted data frames into formatted Excel (`.xlsx`) matrices without hitting local hard drive disk write operations.
+This architecture is currently a fully functional production prototype optimized for single-node local execution. The following structural boundaries have been intentionally mapped to be resolved in the next development phase:
 
-3. **Web Interface Migration (Presentation Phase):**
-   * *Current Status:* The engine runs within a continuous interactive CLI loop inside the VS Code terminal.
-   * *Next Step:* Porting the runtime execution loop into an interactive browser dashboard using the **Streamlit web framework**, mapping dynamic multi-mode router outputs natively to reactive Plotly Express visual canvases.
+1. 🛡️ **Enterprise Query Guardrails (Security Phase)**
+   * **Current Status:** Queries run on safe read-only loops due to database-level constraints.
+   * **Next Step:** Implementing an explicit rule-based abstract syntax tree (AST) parser or regex query validator gate directly into the pipeline to intercept and drop raw SQL mutation tokens (`DROP`, `DELETE`, `ALTER`) before they hit the compiler layer.
 
-4. **API Quota & Scale Hardening (Orchestration Phase):**
-   * *Current Status:* Aggressive sequential text operations face Google Free Tier Requests-Per-Minute (RPM) throttles.
-   * *Next Step:* Implementing query result caching structures via `@st.cache_data` paired with asynchronous batch execution handlers to minimize outbound API tokens during intense multi-turn business deep-dives.
+2. 📥 **In-Memory Data Export Arrays (Delivery Phase)**
+   * **Current Status:** Data metrics are currently output directly as standard terminal Pandas string matrices.
+   * **Next Step:** Engineering an in-memory binary stream pipe utilizing `io.BytesIO` and `openpyxl` to allow end-users to instantly package extracted data frames into formatted Excel (`.xlsx`) matrices without hitting local hard drive disk write operations.
 
-5. **Continuous Metadata Sync & Schema Evolution (Data Pipeline Phase):**
-* *Current Status:* The ChromaDB semantic layer relies on static pre-generated JSON and Dictionary files. In a production environment with rolling data, schema drifts, or new categorical values, the system requires manual vector store recalculations.
-* *Next Step:* Engineering an automated upstream cron trigger or event-driven pipeline (via dbt or direct database webhooks) that listens for DDL changes, automatically updates the JSON schema map, and re-indexes the ChromaDB collections in real-time.
+3. 🌐 **Web Interface Migration (Presentation Phase)**
+   * **Current Status:** The engine runs within a continuous interactive CLI loop inside the VS Code terminal.
+   * **Next Step:** Porting the runtime execution loop into an interactive browser dashboard using the **Streamlit web framework**, mapping dynamic multi-mode router outputs natively to reactive Plotly Express visual canvases.
+
+4. ⚡ **API Quota & Scale Hardening (Orchestration Phase)**
+   * **Current Status:** Aggressive sequential text operations face Google Free Tier Requests-Per-Minute (RPM) throttles.
+   * **Next Step:** Implementing query result caching structures via `@st.cache_data` paired with asynchronous batch execution handlers to minimize outbound API tokens during intense multi-turn business deep-dives.
+
+5. 🔄 **Continuous Metadata Sync & Schema Evolution (Data Pipeline Phase)**
+   * **Current Status:** The ChromaDB semantic layer relies on static pre-generated JSON and Dictionary files. In a production environment with rolling data, schema drifts, or new categorical values, the system requires manual vector store recalculations.
+   * **Next Step:** Engineering an automated upstream cron trigger or event-driven pipeline (via dbt or direct database webhooks) that listens for DDL changes, automatically updates the JSON schema map, and re-indexes the ChromaDB collections in real-time.
