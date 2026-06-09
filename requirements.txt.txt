@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+duckdb
+matplotlib
+seaborn
+plotly
+openpyxl
+langchain-google-genai
+python-dotenv
