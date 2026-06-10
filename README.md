@@ -4,6 +4,8 @@ An enterprise-grade Local AI Data Orchestrator utilizing a cached Semantic Metad
 
 ---
 
+> 💡 **Note for Reviewers:** A synthesized production-grade subset (`sample_logistics_data.csv`) containing 1,000 rows is available in this repository for immediate local testing and execution.
+
 # 🚛 Supply Chain & Logistics AI Data Orchestrator (CLI Edition)
 
 An enterprise-grade, localized **Text-to-SQL & Dynamic EDA (Exploratory Data Analysis) Orchestration Engine** that allows non-technical business managers to query over 5.0M supply chain records using plain, natural language right from the terminal. 
@@ -28,6 +30,9 @@ The application bypasses complex cloud subscription fees by utilizing an incredi
 * **Execution Interface:** VS Code Terminal Console Engine (CLI Interactive Loop)
 * **Data & Visualization Canvas:** Pandas, NumPy, Matplotlib, Seaborn
 
+---
+### 🤖 AI-Augmented Engineering Approach
+This project leverages an **AI-assisted development workflow**. LLMs (Gemini/GPT) were utilized for rapid code prototyping and generating baseline operational scripts. However, the core system design, sub-second DuckDB query integration, and ChromaDB token-saving caching logic were architected and optimized manually to ensure production-grade performance.
 ---
 
 ## 📦 System Architecture Workflow
